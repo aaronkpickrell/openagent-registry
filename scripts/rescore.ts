@@ -9,10 +9,51 @@ import path from "node:path";
 import { labelFor, WEIGHTS } from "../lib/scorer";
 import type { Profile, SignalKey } from "../lib/types";
 
+async function loadImportSet(file: string): Promise<Set<string>> {
+  try {
+    const raw = await fs.readFile(path.join(process.cwd(), "data", "imports", file), "utf-8");
+    const arr = JSON.parse(raw);
+    if (Array.isArray(arr) && typeof arr[0] === "string") {
+      return new Set(arr.map((s) => s.toLowerCase()));
+    }
+    if (Array.isArray(arr)) {
+      return new Set(
+        arr.map((e: { domain?: string }) => (e.domain ?? "").toLowerCase()).filter(Boolean),
+      );
+    }
+    return new Set();
+  } catch {
+    return new Set();
+  }
+}
+
 async function main() {
   const profilesPath = path.join(process.cwd(), "data", "profiles.json");
   const raw = await fs.readFile(profilesPath, "utf-8");
   const profiles = JSON.parse(raw) as Profile[];
+
+  const mcpDomains = await loadImportSet("mcp-registry-domains.json");
+  const llmsTxtHubDomains = await loadImportSet("llms-txt-hub.json");
+  console.log(
+    `Loaded upstreams: MCP Registry=${mcpDomains.size}, llms-txt-hub=${llmsTxtHubDomains.size}\n`,
+  );
+
+  // Ensure every profile has a signal entry for mcp_registry and
+  // in_llms_txt_hub so the upstream credit applies on rescore even for
+  // profiles that didn't carry the signal at scan time.
+  for (const p of profiles) {
+    const dom = p.domain.toLowerCase();
+    const ensure = (key: SignalKey, found: boolean) => {
+      const existing = p.signals.find((s) => s.key === key);
+      if (existing) {
+        existing.found = found;
+      } else {
+        p.signals.push({ key, found, points: 0 });
+      }
+    };
+    ensure("mcp_registry", mcpDomains.has(dom));
+    ensure("in_llms_txt_hub", llmsTxtHubDomains.has(dom));
+  }
 
   let changed = 0;
   let bumped = 0;
