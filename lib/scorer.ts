@@ -6,6 +6,7 @@ import {
   parseOpenApi,
   parseRobots,
 } from "./parsers";
+import { detectBotManagement, productName } from "./botmgmt";
 import type { ApprovalStep, Profile, ScoreLabel, Signal } from "./types";
 
 // Public, transparent scoring weights. Negative values are penalties.
@@ -30,6 +31,7 @@ export const WEIGHTS = {
   in_agent_friendly_directory: 5,
   ai_plugin_json_legacy: 2,
   explicit_prohibition: -50,
+  blocked_by_bot_management: -20,
   blocks_automation: -30,
   unknown_terms: -10,
 } as const;
@@ -57,6 +59,19 @@ export function score(
   const signals: Signal[] = [];
   const push = (s: Signal) => signals.push(s);
   const base = `https://${domain}`;
+
+  // --- bot management / WAF blocking (run FIRST so the report leads with this) ---
+  const bm = detectBotManagement(raw.homepage);
+  if (bm) {
+    push({
+      key: "blocked_by_bot_management",
+      found: true,
+      url: raw.homepage?.url,
+      points: WEIGHTS.blocked_by_bot_management,
+      detail: `Edge-protected by ${productName(bm.product)}. ${bm.evidence}. The scanner can only see what reaches the application — if you protect with bot management, expect agents to be unable to discover your well-known files even if you publish them.`,
+      parsed: { product: bm.product, evidence: bm.evidence },
+    });
+  }
 
   // --- llms.txt ---
   const llms = raw.llms_txt;
@@ -326,7 +341,16 @@ function buildApprovalPath(signals: Signal[], base: string): ApprovalStep[] {
   const oauth = findSig(signals, "oauth_discovery");
   const card = findSig(signals, "a2a_agent_card");
   const blocks = findSig(signals, "blocks_automation");
+  const bm = findSig(signals, "blocked_by_bot_management");
 
+  if (bm?.found) {
+    steps.push({
+      title: "Identify yourself at the edge before doing anything else",
+      detail:
+        "This site is protected by bot management. Anonymous scans see nothing because every request is challenged or blocked. Even if you have valid OAuth or API credentials, you'll need to either (a) be on the operator's allowlist, (b) sign your requests via Web Bot Auth so the bot-management product can recognize you, or (c) request inclusion in the verified-bots / signed-agents directory the operator uses.",
+      done: false,
+    });
+  }
   if (blocks?.found) {
     steps.push({
       title: "Respect explicit crawler block",

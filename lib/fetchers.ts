@@ -19,7 +19,23 @@ export interface FetchResult {
   body?: string;
   contentType?: string;
   error?: string;
+  // Selected response headers we want to inspect later (bot-management signatures).
+  headers?: Record<string, string>;
 }
+
+const HEADERS_OF_INTEREST = [
+  "server",
+  "x-datadome",
+  "cf-mitigated",
+  "cf-ray",
+  "x-akamai-transformed",
+  "x-akamai-edgescape",
+  "x-px-block",
+  "x-perimeter-x",
+  "x-imperva-id",
+  "x-iinfo",
+  "x-sucuri-id",
+];
 
 export async function fetchWellKnown(
   url: string,
@@ -37,12 +53,26 @@ export async function fetchWellKnown(
       redirect: "follow",
       signal: controller.signal,
     });
+    const headers: Record<string, string> = {};
+    for (const h of HEADERS_OF_INTEREST) {
+      const v = res.headers.get(h);
+      if (v) headers[h] = v;
+    }
     if (!res.ok) {
-      return { url, found: false, status: res.status };
+      // On non-2xx, still capture the body (truncated) and headers so we can
+      // detect bot-management challenge pages downstream.
+      const body = await res.text().catch(() => "");
+      return {
+        url,
+        found: false,
+        status: res.status,
+        body: body.slice(0, 2000),
+        headers,
+      };
     }
     const contentType = res.headers.get("content-type") ?? "";
     const body = await res.text();
-    return { url, found: true, status: res.status, body, contentType };
+    return { url, found: true, status: res.status, body, contentType, headers };
   } catch (err) {
     return {
       url,
@@ -57,6 +87,7 @@ export async function fetchWellKnown(
 
 // The full list of endpoints we probe. Keep this in lockstep with scorer.ts.
 export const WELL_KNOWNS = [
+  { key: "homepage", path: "/" },
   { key: "robots_txt", path: "/robots.txt" },
   { key: "llms_txt", path: "/llms.txt" },
   { key: "llms_full_txt", path: "/llms-full.txt" },

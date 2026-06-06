@@ -22,6 +22,7 @@ export type SignalKey =
   | "ai_plugin_json_legacy"
   | "explicit_prohibition"
   | "blocks_automation"
+  | "blocked_by_bot_management"
   | "unknown_terms";
 
 export interface Signal {

@@ -2,10 +2,21 @@
   "domain": "npmjs.com",
   "name": "npm",
   "category": "developer",
-  "scanned_at": "2026-06-06T17:57:38.642Z",
-  "score": 0,
-  "label": "unknown",
+  "scanned_at": "2026-06-06T18:13:07.116Z",
+  "score": -20,
+  "label": "blocked",
   "signals": [
+    {
+      "key": "blocked_by_bot_management",
+      "found": true,
+      "url": "https://npmjs.com/",
+      "points": -20,
+      "detail": "Edge-protected by Cloudflare Bot Management. cf-mitigated=\"challenge\" (status 403). The scanner can only see what reaches the application — if you protect with bot management, expect agents to be unable to discover your well-known files even if you publish them.",
+      "parsed": {
+        "product": "cloudflare",
+        "evidence": "cf-mitigated=\"challenge\" (status 403)"
+      }
+    },
     {
       "key": "llms_txt",
       "found": false,
@@ -78,6 +89,11 @@
     }
   ],
   "approval_path": [
+    {
+      "title": "Identify yourself at the edge before doing anything else",
+      "detail": "This site is protected by bot management. Anonymous scans see nothing because every request is challenged or blocked. Even if you have valid OAuth or API credentials, you'll need to either (a) be on the operator's allowlist, (b) sign your requests via Web Bot Auth so the bot-management product can recognize you, or (c) request inclusion in the verified-bots / signed-agents directory the operator uses.",
+      "done": false
+    },
     {
       "title": "Check for an undocumented developer API",
       "detail": "No OpenAPI at the standard paths. Look for /developer, /developers, /docs, /api for hand-authored documentation.",
