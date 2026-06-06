@@ -8,7 +8,7 @@
 //   - Bail on non-2xx; treat 4xx as "not found" (the common case).
 //   - We never throw; we always return a Result so downstream code is total.
 
-const DEFAULT_TIMEOUT_MS = 5_000;
+const DEFAULT_TIMEOUT_MS = 12_000;
 const UA =
   "OpenAgentRegistry/0.1 (+https://github.com/openagent-registry/openagent-registry; scanner)";
 
