@@ -1,0 +1,40 @@
+[
+  { "domain": "airbnb.com", "name": "Airbnb", "category": "rentals", "homepage": "https://airbnb.com" },
+  { "domain": "booking.com", "name": "Booking.com", "category": "rentals", "homepage": "https://booking.com" },
+  { "domain": "hertz.com", "name": "Hertz", "category": "rentals", "homepage": "https://hertz.com" },
+  { "domain": "avis.com", "name": "Avis", "category": "rentals", "homepage": "https://avis.com" },
+  { "domain": "enterprise.com", "name": "Enterprise", "category": "rentals", "homepage": "https://enterprise.com" },
+  { "domain": "expedia.com", "name": "Expedia", "category": "rentals", "homepage": "https://expedia.com" },
+  { "domain": "vrbo.com", "name": "Vrbo", "category": "rentals", "homepage": "https://vrbo.com" },
+  { "domain": "autorentals.com", "name": "AutoRentals", "category": "rentals", "homepage": "https://autorentals.com" },
+
+  { "domain": "amazon.com", "name": "Amazon", "category": "shopping", "homepage": "https://amazon.com" },
+  { "domain": "shopify.com", "name": "Shopify", "category": "shopping", "homepage": "https://shopify.com" },
+  { "domain": "stripe.com", "name": "Stripe", "category": "shopping", "homepage": "https://stripe.com" },
+  { "domain": "target.com", "name": "Target", "category": "shopping", "homepage": "https://target.com" },
+  { "domain": "walmart.com", "name": "Walmart", "category": "shopping", "homepage": "https://walmart.com" },
+  { "domain": "bestbuy.com", "name": "BestBuy", "category": "shopping", "homepage": "https://bestbuy.com" },
+  { "domain": "etsy.com", "name": "Etsy", "category": "shopping", "homepage": "https://etsy.com" },
+
+  { "domain": "nytimes.com", "name": "The New York Times", "category": "content", "homepage": "https://nytimes.com" },
+  { "domain": "washingtonpost.com", "name": "The Washington Post", "category": "content", "homepage": "https://washingtonpost.com" },
+  { "domain": "bloomberg.com", "name": "Bloomberg", "category": "content", "homepage": "https://bloomberg.com" },
+  { "domain": "reuters.com", "name": "Reuters", "category": "content", "homepage": "https://reuters.com" },
+  { "domain": "substack.com", "name": "Substack", "category": "content", "homepage": "https://substack.com" },
+  { "domain": "medium.com", "name": "Medium", "category": "content", "homepage": "https://medium.com" },
+
+  { "domain": "reddit.com", "name": "Reddit", "category": "social", "homepage": "https://reddit.com" },
+  { "domain": "x.com", "name": "X (Twitter)", "category": "social", "homepage": "https://x.com" },
+  { "domain": "linkedin.com", "name": "LinkedIn", "category": "social", "homepage": "https://linkedin.com" },
+  { "domain": "bsky.app", "name": "Bluesky", "category": "social", "homepage": "https://bsky.app" },
+  { "domain": "mastodon.social", "name": "Mastodon", "category": "social", "homepage": "https://mastodon.social" },
+  { "domain": "discord.com", "name": "Discord", "category": "social", "homepage": "https://discord.com" },
+
+  { "domain": "github.com", "name": "GitHub", "category": "developer", "homepage": "https://github.com" },
+  { "domain": "vercel.com", "name": "Vercel", "category": "developer", "homepage": "https://vercel.com" },
+  { "domain": "cloudflare.com", "name": "Cloudflare", "category": "developer", "homepage": "https://cloudflare.com" },
+  { "domain": "npmjs.com", "name": "npm", "category": "developer", "homepage": "https://npmjs.com" },
+  { "domain": "aws.amazon.com", "name": "AWS", "category": "developer", "homepage": "https://aws.amazon.com" },
+  { "domain": "anthropic.com", "name": "Anthropic", "category": "developer", "homepage": "https://anthropic.com" },
+  { "domain": "openai.com", "name": "OpenAI", "category": "developer", "homepage": "https://openai.com" }
+]
