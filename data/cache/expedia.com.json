@@ -1,0 +1,144 @@
+{
+  "domain": "expedia.com",
+  "name": "Expedia",
+  "category": "rentals",
+  "scanned_at": "2026-06-06T17:56:44.334Z",
+  "score": 23,
+  "label": "limited",
+  "signals": [
+    {
+      "key": "llms_txt",
+      "found": true,
+      "url": "https://expedia.com/llms.txt",
+      "points": 8,
+      "detail": "Title: \"Expedia.com\" · 7 sections · 0 links",
+      "parsed": {
+        "title": "Expedia.com",
+        "section_count": 7,
+        "link_count": 0,
+        "preview": "# Expedia.com\n> Expedia is a leading global online travel platform serving customers worldwide, part of Expedia Group – one of the world's largest travel technology companies.\n\n## Canonical Identity\n- **Brand**: Expedia (an Expedia Group co"
+      }
+    },
+    {
+      "key": "llms_full_txt",
+      "found": false,
+      "points": 0
+    },
+    {
+      "key": "agents_txt",
+      "found": false,
+      "points": 0
+    },
+    {
+      "key": "agents_json",
+      "found": false,
+      "points": 0
+    },
+    {
+      "key": "a2a_agent_card",
+      "found": false,
+      "points": 0
+    },
+    {
+      "key": "agents_md",
+      "found": false,
+      "points": 0
+    },
+    {
+      "key": "openapi",
+      "found": false,
+      "points": 0
+    },
+    {
+      "key": "oauth_discovery",
+      "found": true,
+      "url": "https://expedia.com/.well-known/openid-configuration",
+      "points": 10,
+      "detail": "OAuth/OIDC discovery document present"
+    },
+    {
+      "key": "robots_allows",
+      "found": true,
+      "url": "https://expedia.com/robots.txt",
+      "points": 5,
+      "detail": "14 UA rules · sitemap: no",
+      "parsed": {
+        "user_agents": [
+          "*",
+          "google-hoteladsverifier",
+          "mediapartners-google",
+          "adsbot-google-mobile",
+          "adsbot-google",
+          "adidxbot",
+          "oai-adsbot",
+          "semrushbot",
+          "oai-searchbot",
+          "chatgpt-user",
+          "perplexitybot",
+          "perplexity-user",
+          "claude-user",
+          "claude-searchbot"
+        ],
+        "content_signals": {},
+        "blocks_ai_crawlers": [],
+        "has_sitemap": false
+      }
+    },
+    {
+      "key": "content_signals",
+      "found": false,
+      "points": 0
+    },
+    {
+      "key": "ai_plugin_json_legacy",
+      "found": false,
+      "points": 0
+    },
+    {
+      "key": "mcp_registry",
+      "found": false,
+      "points": 0
+    },
+    {
+      "key": "in_llms_txt_hub",
+      "found": false,
+      "points": 0
+    },
+    {
+      "key": "in_agent_friendly_directory",
+      "found": false,
+      "points": 0
+    }
+  ],
+  "approval_path": [
+    {
+      "title": "Check for an undocumented developer API",
+      "detail": "No OpenAPI at the standard paths. Look for /developer, /developers, /docs, /api for hand-authored documentation.",
+      "link": "https://expedia.com/developers",
+      "done": false
+    },
+    {
+      "title": "Register an OAuth application",
+      "detail": "OAuth/OIDC discovery is published. Register a client, pick narrow scopes, implement signature verification on webhooks.",
+      "link": "https://expedia.com/.well-known/openid-configuration",
+      "done": true
+    },
+    {
+      "title": "Publish your own agent identity",
+      "detail": "Generate an Ed25519 keypair, host a public key directory, sign your HTTP requests (Web Bot Auth), apply to Cloudflare's bots & agents directory if you cross their edge.",
+      "link": "https://developers.cloudflare.com/bots/concepts/bot/verified-bots/",
+      "done": false
+    },
+    {
+      "title": "Respect robots.txt and Content Signals",
+      "detail": "Even when you are an approved agent, honor the site's policy preferences. Cache them; refresh weekly.",
+      "done": true
+    }
+  ],
+  "recommended_next_steps": [
+    "Publish /agents.txt declaring which agent protocols you support.",
+    "If you operate an agent, publish /.well-known/agent-card.json so others can discover it.",
+    "Publish /AGENTS.md with human-readable agent instructions.",
+    "Publish your API as OpenAPI 3.x at a discoverable location."
+  ]
+}

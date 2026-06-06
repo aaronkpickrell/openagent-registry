@@ -1,0 +1,220 @@
+{
+  "domain": "nytimes.com",
+  "name": "The New York Times",
+  "category": "content",
+  "scanned_at": "2026-06-06T17:57:06.993Z",
+  "score": -25,
+  "label": "blocked",
+  "signals": [
+    {
+      "key": "llms_txt",
+      "found": false,
+      "points": 0
+    },
+    {
+      "key": "llms_full_txt",
+      "found": false,
+      "points": 0
+    },
+    {
+      "key": "agents_txt",
+      "found": false,
+      "points": 0
+    },
+    {
+      "key": "agents_json",
+      "found": false,
+      "points": 0
+    },
+    {
+      "key": "a2a_agent_card",
+      "found": false,
+      "points": 0
+    },
+    {
+      "key": "agents_md",
+      "found": false,
+      "points": 0
+    },
+    {
+      "key": "openapi",
+      "found": false,
+      "points": 0
+    },
+    {
+      "key": "oauth_discovery",
+      "found": false,
+      "points": 0
+    },
+    {
+      "key": "robots_allows",
+      "found": true,
+      "url": "https://nytimes.com/robots.txt",
+      "points": 5,
+      "detail": "60 UA rules · sitemap: yes",
+      "parsed": {
+        "user_agents": [
+          "*",
+          "googlebot",
+          "aliyunsecbot",
+          "amazonbot",
+          "anthropic-ai",
+          "applebot-extended",
+          "archive.org_bot",
+          "audigentadbot",
+          "awariorssbot",
+          "awariosmartbot",
+          "blexbot",
+          "bytespider",
+          "ccbot",
+          "chatgpt-user",
+          "claudebot",
+          "claude-searchbot",
+          "claude-user",
+          "claude-web",
+          "cohere-ai",
+          "dataforseobot",
+          "diffbot",
+          "duckassistbot",
+          "echoboxbot",
+          "facebookbot",
+          "friendlycrawler",
+          "google-cloudvertexbot",
+          "google-extended",
+          "gptbot",
+          "imagesiftbot",
+          "jetslide",
+          "magpie-crawler",
+          "meta-externalagent",
+          "meta-externalfetcher",
+          "meta-webindexer",
+          "meta-webindexer/1.1",
+          "mycentralaiscraperbot",
+          "newsnow",
+          "news-please",
+          "oai-searchbot",
+          "omgili",
+          "omgilibot",
+          "peer39_crawler",
+          "peer39_crawler/1.0",
+          "perplexitybot",
+          "perplexity-user",
+          "poseidon research crawler",
+          "quillbot.com",
+          "quora-bot",
+          "scrapy",
+          "seekrbot",
+          "seznamhomepagecrawler",
+          "taragroup intelligent bot",
+          "timpibot",
+          "turnitinbot",
+          "viennatinybot",
+          "youbot",
+          "amazonadbot",
+          "facebookexternalhit",
+          "twitterbot",
+          "redditbot"
+        ],
+        "content_signals": {},
+        "blocks_ai_crawlers": [
+          "anthropic-ai",
+          "applebot-extended",
+          "bytespider",
+          "ccbot",
+          "claudebot",
+          "claude-web",
+          "diffbot",
+          "google-extended",
+          "gptbot",
+          "oai-searchbot",
+          "perplexitybot"
+        ],
+        "has_sitemap": true
+      }
+    },
+    {
+      "key": "content_signals",
+      "found": false,
+      "points": 0
+    },
+    {
+      "key": "blocks_automation",
+      "found": true,
+      "url": "https://nytimes.com/robots.txt",
+      "points": -30,
+      "detail": "Explicit Disallow for: anthropic-ai, applebot-extended, bytespider, ccbot, claudebot, claude-web, diffbot, google-extended, gptbot, oai-searchbot, perplexitybot",
+      "parsed": {
+        "blocks": [
+          "anthropic-ai",
+          "applebot-extended",
+          "bytespider",
+          "ccbot",
+          "claudebot",
+          "claude-web",
+          "diffbot",
+          "google-extended",
+          "gptbot",
+          "oai-searchbot",
+          "perplexitybot"
+        ]
+      }
+    },
+    {
+      "key": "ai_plugin_json_legacy",
+      "found": false,
+      "points": 0
+    },
+    {
+      "key": "mcp_registry",
+      "found": false,
+      "points": 0
+    },
+    {
+      "key": "in_llms_txt_hub",
+      "found": false,
+      "points": 0
+    },
+    {
+      "key": "in_agent_friendly_directory",
+      "found": false,
+      "points": 0
+    }
+  ],
+  "approval_path": [
+    {
+      "title": "Respect explicit crawler block",
+      "detail": "robots.txt disallows known AI crawlers. Do not crawl with those user-agents. Look for a partner / data-licensing path before automating.",
+      "done": false
+    },
+    {
+      "title": "Check for an undocumented developer API",
+      "detail": "No OpenAPI at the standard paths. Look for /developer, /developers, /docs, /api for hand-authored documentation.",
+      "link": "https://nytimes.com/developers",
+      "done": false
+    },
+    {
+      "title": "Find the developer signup",
+      "detail": "No standard OAuth discovery — most sites still have a developer-portal signup. Find the OAuth client registration page on their site.",
+      "done": false
+    },
+    {
+      "title": "Publish your own agent identity",
+      "detail": "Generate an Ed25519 keypair, host a public key directory, sign your HTTP requests (Web Bot Auth), apply to Cloudflare's bots & agents directory if you cross their edge.",
+      "link": "https://developers.cloudflare.com/bots/concepts/bot/verified-bots/",
+      "done": false
+    },
+    {
+      "title": "Respect robots.txt and Content Signals",
+      "detail": "Even when you are an approved agent, honor the site's policy preferences. Cache them; refresh weekly.",
+      "done": true
+    }
+  ],
+  "recommended_next_steps": [
+    "Publish /llms.txt — a curated markdown index of your useful docs for LLMs.",
+    "Publish /agents.txt declaring which agent protocols you support.",
+    "If you operate an agent, publish /.well-known/agent-card.json so others can discover it.",
+    "Publish /AGENTS.md with human-readable agent instructions.",
+    "Publish your API as OpenAPI 3.x at a discoverable location.",
+    "Expose OAuth/OIDC discovery at /.well-known/oauth-authorization-server."
+  ]
+}

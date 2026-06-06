@@ -1,0 +1,148 @@
+{
+  "domain": "cloudflare.com",
+  "name": "Cloudflare",
+  "category": "developer",
+  "scanned_at": "2026-06-06T17:57:36.413Z",
+  "score": 48,
+  "label": "partial",
+  "signals": [
+    {
+      "key": "llms_txt",
+      "found": true,
+      "url": "https://cloudflare.com/llms.txt",
+      "points": 8,
+      "detail": "Title: \"Cloudflare\" · 13 sections · 88 links",
+      "parsed": {
+        "title": "Cloudflare",
+        "section_count": 13,
+        "link_count": 88,
+        "preview": "# Cloudflare\n\n> Cloudflare is a global cloud connectivity company operating in 335+ cities worldwide. It provides a unified platform spanning developer infrastructure (serverless compute, databases, AI inference, and storage), application s"
+      }
+    },
+    {
+      "key": "llms_full_txt",
+      "found": true,
+      "url": "https://cloudflare.com/llms-full.txt",
+      "points": 5,
+      "detail": "205736 bytes of extended LLM context"
+    },
+    {
+      "key": "agents_txt",
+      "found": false,
+      "points": 0
+    },
+    {
+      "key": "agents_json",
+      "found": true,
+      "url": "https://cloudflare.com/agents.json",
+      "points": 15,
+      "detail": "Present"
+    },
+    {
+      "key": "a2a_agent_card",
+      "found": false,
+      "points": 0
+    },
+    {
+      "key": "agents_md",
+      "found": false,
+      "points": 0
+    },
+    {
+      "key": "openapi",
+      "found": true,
+      "url": "https://cloudflare.com/openapi.json",
+      "points": 15,
+      "detail": "OpenAPI 3.1.0 · Cloudflare Public Site API · 3 paths",
+      "parsed": {
+        "version": "3.1.0",
+        "title": "Cloudflare Public Site API",
+        "path_count": 3,
+        "raw_valid": true
+      }
+    },
+    {
+      "key": "oauth_discovery",
+      "found": false,
+      "points": 0
+    },
+    {
+      "key": "robots_allows",
+      "found": true,
+      "url": "https://cloudflare.com/robots.txt",
+      "points": 5,
+      "detail": "9 UA rules · sitemap: yes",
+      "parsed": {
+        "user_agents": [
+          "*",
+          "gptbot",
+          "chatgpt-user",
+          "google-extended",
+          "anthropic-ai",
+          "claude-web",
+          "ccbot",
+          "perplexitybot",
+          "cohere-ai"
+        ],
+        "content_signals": {},
+        "blocks_ai_crawlers": [],
+        "has_sitemap": true
+      }
+    },
+    {
+      "key": "content_signals",
+      "found": false,
+      "points": 0
+    },
+    {
+      "key": "ai_plugin_json_legacy",
+      "found": false,
+      "points": 0
+    },
+    {
+      "key": "mcp_registry",
+      "found": false,
+      "points": 0
+    },
+    {
+      "key": "in_llms_txt_hub",
+      "found": false,
+      "points": 0
+    },
+    {
+      "key": "in_agent_friendly_directory",
+      "found": false,
+      "points": 0
+    }
+  ],
+  "approval_path": [
+    {
+      "title": "Use the published OpenAPI",
+      "detail": "Generate a client from the spec; treat it as your primary interface. Pair with OAuth where available.",
+      "link": "https://cloudflare.com/openapi.json",
+      "done": true
+    },
+    {
+      "title": "Find the developer signup",
+      "detail": "No standard OAuth discovery — most sites still have a developer-portal signup. Find the OAuth client registration page on their site.",
+      "done": false
+    },
+    {
+      "title": "Publish your own agent identity",
+      "detail": "Generate an Ed25519 keypair, host a public key directory, sign your HTTP requests (Web Bot Auth), apply to Cloudflare's bots & agents directory if you cross their edge.",
+      "link": "https://developers.cloudflare.com/bots/concepts/bot/verified-bots/",
+      "done": false
+    },
+    {
+      "title": "Respect robots.txt and Content Signals",
+      "detail": "Even when you are an approved agent, honor the site's policy preferences. Cache them; refresh weekly.",
+      "done": true
+    }
+  ],
+  "recommended_next_steps": [
+    "Publish /agents.txt declaring which agent protocols you support.",
+    "If you operate an agent, publish /.well-known/agent-card.json so others can discover it.",
+    "Publish /AGENTS.md with human-readable agent instructions.",
+    "Expose OAuth/OIDC discovery at /.well-known/oauth-authorization-server."
+  ]
+}
