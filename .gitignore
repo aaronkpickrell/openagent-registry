@@ -43,3 +43,4 @@ yarn-error.log*
 # Future versions will move to Vercel KV / Postgres for live persistence.
 *.sqlite
 *.db
+HANDOFF.md
