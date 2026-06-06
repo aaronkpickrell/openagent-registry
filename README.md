@@ -27,7 +27,9 @@ What OAR adds that none of the above does today:
 
 ## Status
 
-Pre-alpha. Scaffolding stage. Not deployed publicly yet. Looking for contributors.
+Pre-alpha but live. **Public deploy: https://openagent-registry.vercel.app**.
+
+After the v0.1 import, the registry tracks **1,400+ services across 6 industry categories**, sourced from the original seed plus an import of [llms-txt-hub](https://github.com/thedaviddias/llms-txt-hub). Every service has a live score, a label, and a generated approval-path checklist. Looking for contributors — especially for approval-path data per service (the moat).
 
 ## Stack
 
@@ -92,7 +94,8 @@ Labels:
 - **Shopping & Commerce** — Amazon, Shopify, Stripe, Target, Walmart, BestBuy, Etsy
 - **Content & News** — NYT, WaPo, Bloomberg, Reuters, Substack, Medium
 - **Social & Community** — Reddit, X, LinkedIn, Bluesky, Mastodon, Discord
-- **Developer Platforms** — GitHub, Vercel, Cloudflare, npm, AWS
+- **Developer Platforms** — GitHub, Vercel, Cloudflare, npm, AWS, plus 800+ dev tools from the upstream import
+- **AI & ML Platforms** — Anthropic, OpenAI, and 500+ AI/ML platforms publishing `llms.txt`
 
 Within each category, services are ranked by their AgentRank score. The category page is the SEO-friendly editorial surface: *"Top agent-ready rental sites, [month] [year]"*.
 

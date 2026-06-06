@@ -11,37 +11,55 @@ import type { ApprovalStep, Profile, ScoreLabel, Signal } from "./types";
 
 // Public, transparent scoring weights. Negative values are penalties.
 // Keep in lockstep with docs/rubric.md.
+//
+// Design intent (v0.2 recalibration): the rubric used to over-reward "soft"
+// agent-discoverability signals (llms.txt, directory membership) versus signals
+// that prove a real callable surface (OpenAPI, OAuth, MCP, A2A). The first pass
+// flooded the top of the leaderboard with low-quality sites whose only act of
+// agent-readiness was publishing an llms.txt for AEO. The new weights treat
+// llms.txt as a basic AEO move (small bonus), not a foundation, and demote
+// upstream-registry membership to a near-zero signal — what matters is what the
+// scanner can actually verify on the site itself.
 export const WEIGHTS = {
+  // Real machine-usable surfaces — these are what let an agent DO something.
   mcp_registry: 25,
   a2a_agent_card: 25,
+  openapi: 18,
   agents_json: 15,
-  openapi: 15,
   web_bot_auth: 15,
-  dev_docs: 10,
+  oauth_discovery: 12,
   approval_path: 10,
-  oauth_discovery: 10,
-  agents_txt: 10,
-  llms_txt: 8,
-  agents_md: 8,
-  rsl: 8,
-  robots_allows: 5,
+  dev_docs: 8,
+  // Declared-intent signals — useful but not a callable surface on their own.
+  agents_txt: 6,
+  rsl: 6,
   content_signals: 5,
-  llms_full_txt: 5,
-  in_llms_txt_hub: 5,
-  in_agent_friendly_directory: 5,
-  ai_plugin_json_legacy: 2,
+  agents_md: 4,
+  // Soft / AEO signals — having them is a small bonus; absence is not damning.
+  llms_txt: 3,
+  in_agent_friendly_directory: 3,
+  robots_allows: 3,
+  llms_full_txt: 2,
+  in_llms_txt_hub: 1,
+  ai_plugin_json_legacy: 0,
+  // Penalties — active hostility.
   explicit_prohibition: -50,
-  blocked_by_bot_management: -20,
   blocks_automation: -30,
+  blocked_by_bot_management: -20,
   unknown_terms: -10,
 } as const;
 
 export function labelFor(score: number): ScoreLabel {
+  // Thresholds calibrated against the v0.2 weights: a site needs real
+  // callable surfaces (OpenAPI+18, OAuth+12, MCP+25, A2A+25, agents.json+15)
+  // to earn anything above "limited." Just publishing llms.txt earns you ~+8
+  // total — correctly "unknown" or "limited," not the inflated bucket the
+  // first cut produced.
   if (score < 0) return "blocked";
-  if (score < 20) return "unknown";
-  if (score < 40) return "limited";
-  if (score < 60) return "partial";
-  if (score < 80) return "agent-friendly";
+  if (score < 10) return "unknown";
+  if (score < 20) return "limited";
+  if (score < 35) return "partial";
+  if (score < 55) return "agent-friendly";
   return "agent-ready";
 }
 

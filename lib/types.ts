@@ -54,7 +54,8 @@ export type CategorySlug =
   | "shopping"
   | "content"
   | "social"
-  | "developer";
+  | "developer"
+  | "ai";
 
 export interface Profile {
   domain: string;

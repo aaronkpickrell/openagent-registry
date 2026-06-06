@@ -1,61 +1,60 @@
-// Trivial file-backed cache for MVP. Profiles live in data/cache/{domain}.json.
-// Swap for Vercel KV / Postgres when we need monitoring / history / concurrency.
+// Single-file profile cache. Backed by data/profiles.json so the whole catalog
+// loads with one read and ships as one artifact at deploy. In-memory map for
+// fast lookups.
 //
-// Production-safe note: Vercel serverless functions have a read-only filesystem
-// except /tmp. On Vercel we fall through to in-memory only. Local dev writes to
-// data/cache/ so seed scans are reproducible.
+// Why single file: per-domain files were fine at 34 entries but at 1,000+ they
+// blow up the git diff, the deploy bundle, and the request-time I/O on
+// readAllProfiles. One JSON file at ~7-10MB is comfortable for Vercel.
+//
+// Production note: Vercel serverless filesystem is read-only outside /tmp, so
+// runtime writes only update the in-memory map for the lifetime of that
+// instance. Persistence beyond an instance requires a real database (Vercel KV
+// or Postgres — slotted for a follow-up).
 
 import { promises as fs } from "node:fs";
 import path from "node:path";
 import type { Profile } from "./types";
 
-const CACHE_DIR = path.join(process.cwd(), "data", "cache");
-const inMem = new Map<string, Profile>();
-
+const PROFILES_PATH = path.join(process.cwd(), "data", "profiles.json");
 const isReadOnly = process.env.VERCEL === "1";
 
+let mem: Map<string, Profile> | null = null;
+let memReady: Promise<void> | null = null;
+
+async function ensureLoaded(): Promise<void> {
+  if (mem) return;
+  if (memReady) return memReady;
+  memReady = (async () => {
+    try {
+      const raw = await fs.readFile(PROFILES_PATH, "utf-8");
+      const arr = JSON.parse(raw) as Profile[];
+      mem = new Map(arr.map((p) => [p.domain.toLowerCase(), p]));
+    } catch {
+      mem = new Map();
+    }
+  })();
+  await memReady;
+}
+
+async function persist(): Promise<void> {
+  if (isReadOnly || !mem) return;
+  await fs.mkdir(path.dirname(PROFILES_PATH), { recursive: true });
+  const arr = [...mem.values()];
+  await fs.writeFile(PROFILES_PATH, JSON.stringify(arr, null, 2), "utf-8");
+}
+
 export async function readProfile(domain: string): Promise<Profile | null> {
-  const key = domain.toLowerCase();
-  if (inMem.has(key)) return inMem.get(key)!;
-  if (isReadOnly) return null;
-  try {
-    const raw = await fs.readFile(path.join(CACHE_DIR, `${key}.json`), "utf-8");
-    const p = JSON.parse(raw) as Profile;
-    inMem.set(key, p);
-    return p;
-  } catch {
-    return null;
-  }
+  await ensureLoaded();
+  return mem!.get(domain.toLowerCase()) ?? null;
 }
 
 export async function writeProfile(profile: Profile): Promise<void> {
-  const key = profile.domain.toLowerCase();
-  inMem.set(key, profile);
-  if (isReadOnly) return;
-  await fs.mkdir(CACHE_DIR, { recursive: true });
-  await fs.writeFile(
-    path.join(CACHE_DIR, `${key}.json`),
-    JSON.stringify(profile, null, 2),
-    "utf-8",
-  );
+  await ensureLoaded();
+  mem!.set(profile.domain.toLowerCase(), profile);
+  await persist();
 }
 
 export async function readAllProfiles(): Promise<Profile[]> {
-  if (isReadOnly) return [...inMem.values()];
-  try {
-    const entries = await fs.readdir(CACHE_DIR);
-    const out: Profile[] = [];
-    for (const f of entries) {
-      if (!f.endsWith(".json")) continue;
-      try {
-        const raw = await fs.readFile(path.join(CACHE_DIR, f), "utf-8");
-        out.push(JSON.parse(raw) as Profile);
-      } catch {
-        // ignore corrupt cache entries
-      }
-    }
-    return out;
-  } catch {
-    return [...inMem.values()];
-  }
+  await ensureLoaded();
+  return [...mem!.values()];
 }

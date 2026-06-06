@@ -54,12 +54,15 @@ interface Props {
   showCategoryFilter?: boolean;
 }
 
+const PAGE_SIZE = 100;
+
 export default function Leaderboard({ profiles, showCategoryFilter = false }: Props) {
   const [search, setSearch] = useState("");
   const [labelFilter, setLabelFilter] = useState<Set<ScoreLabel>>(new Set());
   const [signalFilter, setSignalFilter] = useState<Set<SignalKey>>(new Set());
   const [categoryFilter, setCategoryFilter] = useState<Set<CategorySlug>>(new Set());
   const [sortKey, setSortKey] = useState<SortKey>("score-desc");
+  const [visible, setVisible] = useState(PAGE_SIZE);
 
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
@@ -111,8 +114,16 @@ export default function Leaderboard({ profiles, showCategoryFilter = false }: Pr
     setter(next);
   }
 
+  // Reset visible count when filters change (any filter narrows the set; we
+  // want the user to see the top of the new ranking, not scroll-restored).
+  // Tracking a key derived from filter state to trigger reset is cleaner than
+  // a useEffect because we want the reset to happen synchronously with render.
+  const filterKey = `${search}|${[...labelFilter].sort().join(",")}|${[...signalFilter].sort().join(",")}|${[...categoryFilter].sort().join(",")}|${sortKey}`;
+  // Cap visible to the filtered length so "load more" stops at the end.
   const total = profiles.length;
-  const shown = filtered.length;
+  const shown = Math.min(filtered.length, visible);
+  const truncated = filtered.length > shown;
+  const visibleRows = filtered.slice(0, shown);
 
   return (
     <div className="space-y-6">
@@ -188,7 +199,8 @@ export default function Leaderboard({ profiles, showCategoryFilter = false }: Pr
 
         <div className="flex justify-between text-xs opacity-60">
           <span>
-            Showing {shown} of {total}
+            Showing {shown} of {filtered.length}
+            {filtered.length !== total && ` (filtered from ${total})`}
           </span>
           {(search ||
             labelFilter.size > 0 ||
@@ -200,6 +212,7 @@ export default function Leaderboard({ profiles, showCategoryFilter = false }: Pr
                 setLabelFilter(new Set());
                 setSignalFilter(new Set());
                 setCategoryFilter(new Set());
+                setVisible(PAGE_SIZE);
               }}
               className="underline hover:no-underline"
             >
@@ -215,24 +228,37 @@ export default function Leaderboard({ profiles, showCategoryFilter = false }: Pr
           No services match. Loosen filters or try a different search.
         </p>
       ) : (
-        <div className="overflow-x-auto border border-black/10 dark:border-white/10 rounded-md">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-black/10 dark:border-white/10 bg-black/[0.02] dark:bg-white/[0.04]">
-                <th className="text-left px-4 py-2 font-medium w-12">#</th>
-                <th className="text-left px-4 py-2 font-medium">Service</th>
-                <th className="text-left px-4 py-2 font-medium">Status</th>
-                <th className="text-left px-4 py-2 font-medium">Signals</th>
-                <th className="text-right px-4 py-2 font-medium">AgentRank</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filtered.map((p, i) => (
-                <Row key={p.domain} profile={p} rank={i + 1} />
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <>
+          <div className="overflow-x-auto border border-black/10 dark:border-white/10 rounded-md">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-black/10 dark:border-white/10 bg-black/[0.02] dark:bg-white/[0.04]">
+                  <th className="text-left px-4 py-2 font-medium w-12">#</th>
+                  <th className="text-left px-4 py-2 font-medium">Service</th>
+                  <th className="text-left px-4 py-2 font-medium">Status</th>
+                  <th className="text-left px-4 py-2 font-medium">Signals</th>
+                  <th className="text-right px-4 py-2 font-medium">AgentRank</th>
+                </tr>
+              </thead>
+              <tbody>
+                {visibleRows.map((p, i) => (
+                  <Row key={p.domain} profile={p} rank={i + 1} />
+                ))}
+              </tbody>
+            </table>
+          </div>
+          {truncated && (
+            <div className="flex justify-center pt-2">
+              <button
+                onClick={() => setVisible(visible + PAGE_SIZE)}
+                className="text-sm rounded-md border border-black/15 dark:border-white/15 px-4 py-2 hover:border-black/50 dark:hover:border-white/50"
+              >
+                Show {Math.min(PAGE_SIZE, filtered.length - shown)} more (
+                {filtered.length - shown} remaining)
+              </button>
+            </div>
+          )}
+        </>
       )}
     </div>
   );

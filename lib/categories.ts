@@ -29,7 +29,13 @@ export const CATEGORIES: CategoryDef[] = [
     slug: "developer",
     name: "Developer Platforms",
     description:
-      "Code hosting, deploy targets, package registries, and cloud infrastructure. The most agent-mature category today.",
+      "Code hosting, deploy targets, package registries, cloud infrastructure, data, and security tools. The largest pool of llms.txt adopters today.",
+  },
+  {
+    slug: "ai",
+    name: "AI & ML Platforms",
+    description:
+      "LLM providers, AI agents, ML infrastructure, and the agent-adjacent layer. The fastest-growing category — and the one agents call most.",
   },
 ];
 
