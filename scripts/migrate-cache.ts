@@ -1,5 +1,5 @@
 // One-shot: collapse data/cache/*.json (per-domain files) into a single
-// data/profiles.json. Idempotent — running it twice doesn't double-count.
+// data/profiles.json. Idempotent - running it twice doesn't double-count.
 
 import { promises as fs } from "node:fs";
 import path from "node:path";

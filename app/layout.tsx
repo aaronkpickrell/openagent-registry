@@ -3,7 +3,7 @@ import Link from "next/link";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "OpenAgent Registry — agent-ready scanner and leaderboard",
+  title: "OpenAgent Registry - agent-ready scanner and leaderboard",
   description:
     "Scan any site for the full stack of agent-access signals (llms.txt, agents.txt, A2A, MCP, OpenAPI, robots.txt + Content Signals, OAuth, RSL). Get a score, a category rank, and a concrete approval-path checklist.",
 };

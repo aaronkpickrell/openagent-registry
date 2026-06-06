@@ -1,6 +1,6 @@
 # Contributing to OpenAgent Registry
 
-Thanks for considering a contribution. This project is community-owned infrastructure for the agent ecosystem — it gets better when more people use it and add to it.
+Thanks for considering a contribution. This project is community-owned infrastructure for the agent ecosystem - it gets better when more people use it and add to it.
 
 ## Three high-leverage ways to contribute
 
@@ -22,7 +22,7 @@ That's it. CI will run a live scan against it and the leaderboard will update on
 
 ### 2. Improve a parser
 
-`lib/parsers.ts` deliberately starts conservative — we'd rather report "found, not yet deeply parsed" than overclaim. If you can pull more structure out of any of these:
+`lib/parsers.ts` deliberately starts conservative - we'd rather report "found, not yet deeply parsed" than overclaim. If you can pull more structure out of any of these:
 
 - `robots.txt` (incl. Cloudflare Content Signals: `search=`, `ai-input=`, `ai-train=`)
 - `llms.txt` (and `llms-full.txt`)
@@ -39,12 +39,12 @@ This is the killer feature and the deepest moat. For each known service we want 
 
 > **To become an approved agent for Stripe:**
 > 1. Register a Stripe account at <https://dashboard.stripe.com/register>
-> 2. Create a Connect platform application — Standard, Express, or Custom
+> 2. Create a Connect platform application - Standard, Express, or Custom
 > 3. Request the `read_only` + `write` scopes for your use case at <https://...>
 > 4. Implement webhook signature verification per <https://stripe.com/docs/webhooks/signatures>
 > 5. Submit for production review via Connect dashboard
 
-Edit `data/approval-paths/{domain}.md`. We accept partial entries — even one verified step is better than none.
+Edit `data/approval-paths/{domain}.md`. We accept partial entries - even one verified step is better than none.
 
 ## Scoring rubric changes
 

@@ -28,7 +28,7 @@ export default function SearchBox() {
         type="text"
         value={value}
         onChange={(e) => setValue(e.target.value)}
-        placeholder="Enter a domain — e.g. stripe.com"
+        placeholder="Enter a domain - e.g. stripe.com"
         className="flex-1 rounded-md border border-black/15 dark:border-white/15 bg-transparent px-3 py-2 text-base outline-none focus:border-black/60 dark:focus:border-white/60"
         autoFocus
       />

@@ -8,6 +8,7 @@ import { CATEGORIES } from "@/lib/categories";
 const LABEL_DOT: Record<ScoreLabel, string> = {
   "agent-ready": "bg-score-ready",
   "agent-friendly": "bg-score-friendly",
+  "commercially-gated": "bg-purple-500",
   partial: "bg-score-partial",
   limited: "bg-score-limited",
   unknown: "bg-score-unknown",
@@ -17,6 +18,7 @@ const LABEL_DOT: Record<ScoreLabel, string> = {
 const LABEL_TONE: Record<ScoreLabel, string> = {
   "agent-ready": "text-score-ready",
   "agent-friendly": "text-score-friendly",
+  "commercially-gated": "text-purple-600 dark:text-purple-400",
   partial: "text-score-partial",
   limited: "text-score-limited",
   unknown: "text-score-unknown",
@@ -26,6 +28,7 @@ const LABEL_TONE: Record<ScoreLabel, string> = {
 const LABELS: ScoreLabel[] = [
   "agent-ready",
   "agent-friendly",
+  "commercially-gated",
   "partial",
   "limited",
   "unknown",
@@ -357,7 +360,7 @@ function Row({ profile, rank }: { profile: Profile; rank: number }) {
             </span>
           ))}
           {headlineSignals.length === 0 && (
-            <span className="text-xs opacity-50">—</span>
+            <span className="text-xs opacity-50"> - </span>
           )}
         </div>
       </td>

@@ -7,6 +7,7 @@ import type { Profile } from "@/lib/types";
 const LABEL_TONE: Record<Profile["label"], string> = {
   "agent-ready": "text-score-ready",
   "agent-friendly": "text-score-friendly",
+  "commercially-gated": "text-purple-600 dark:text-purple-400",
   partial: "text-score-partial",
   limited: "text-score-limited",
   unknown: "text-score-unknown",
@@ -28,11 +29,11 @@ export default async function HomePage() {
           Is this site ready for agents?
         </h1>
         <p className="text-lg max-w-2xl opacity-80">
-          OpenAgent Registry scans any URL for the full stack of agent-access signals —
+          OpenAgent Registry scans any URL for the full stack of agent-access signals  - 
           <span className="font-mono"> llms.txt</span>, <span className="font-mono">agents.txt</span>,{" "}
           <span className="font-mono">A2A</span>, <span className="font-mono">MCP</span>,{" "}
           <span className="font-mono">OpenAPI</span>, <span className="font-mono">robots.txt</span>,{" "}
-          <span className="font-mono">OAuth</span>, plus bot-management at the edge — scores it,
+          <span className="font-mono">OAuth</span>, plus bot-management at the edge - scores it,
           ranks it within its industry, and generates a concrete checklist of what the site (or
           its agents) need to do next.
         </p>
@@ -98,7 +99,7 @@ export default async function HomePage() {
             Currently blocking agents
           </h2>
           <p className="opacity-80 max-w-2xl text-sm">
-            Sites flagged as actively hostile to agent access — either via explicit{" "}
+            Sites flagged as actively hostile to agent access - either via explicit{" "}
             <span className="font-mono">robots.txt</span> blocks of known AI crawlers, or via
             edge bot-management products that challenge automated traffic before it reaches the
             application.
@@ -158,7 +159,7 @@ export default async function HomePage() {
           <span className="text-xs opacity-60">{totalScanned} services scanned</span>
         </div>
         <p className="opacity-80 max-w-2xl">
-          The full agent-access stack, in one report. Presence is necessary but not sufficient — we
+          The full agent-access stack, in one report. Presence is necessary but not sufficient - we
           parse what we find and produce concrete next steps either to use the surface (for agent
           builders) or to publish it (for site owners).
         </p>

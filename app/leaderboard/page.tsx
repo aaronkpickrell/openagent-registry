@@ -12,7 +12,7 @@ export default async function GlobalLeaderboardPage() {
         <h1 className="text-3xl md:text-4xl font-semibold tracking-tight">All services</h1>
         <p className="opacity-80 max-w-2xl">
           Every scanned service across every category, ranked by AgentRank. Filter by status,
-          category, or the signals you require — and sort however you want.
+          category, or the signals you require - and sort however you want.
         </p>
       </section>
       <Leaderboard profiles={all} showCategoryFilter />

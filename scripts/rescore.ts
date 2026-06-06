@@ -1,5 +1,5 @@
 // Recompute scores on every existing profile using the current WEIGHTS table
-// in lib/scorer.ts. Cheap — we don't re-fetch anything, we just re-derive
+// in lib/scorer.ts. Cheap - we don't re-fetch anything, we just re-derive
 // total + label from the existing signal facts. Run after the rubric changes.
 //
 // pnpm tsx scripts/rescore.ts
@@ -20,19 +20,39 @@ async function main() {
 
   for (const p of profiles) {
     const before = p.score;
+    const hasCommercial = p.signals.some(
+      (s) => s.key === "licensed_commercial_access" && s.found,
+    );
+    const wasBlocked = p.signals.some(
+      (s) =>
+        s.found &&
+        (s.key === "blocked_by_bot_management" ||
+          s.key === "blocks_automation" ||
+          s.key === "explicit_prohibition"),
+    );
     let total = 0;
     for (const s of p.signals) {
       const w = WEIGHTS[s.key as SignalKey];
-      // Found signals (positive) or always-applied penalties (when triggered).
       if (s.found || s.points < 0) {
-        s.points = w ?? 0;
+        // Commercial trumps block: zero out edge-block penalties when a
+        // commercial licensing path is present.
+        if (
+          hasCommercial &&
+          (s.key === "blocked_by_bot_management" ||
+            s.key === "blocks_automation" ||
+            s.key === "explicit_prohibition")
+        ) {
+          s.points = 0;
+        } else {
+          s.points = w ?? 0;
+        }
       } else {
         s.points = 0;
       }
       total += s.points;
     }
     p.score = total;
-    p.label = labelFor(total);
+    p.label = labelFor(total, { hasCommercial, wasBlocked });
     if (before !== total) {
       changed++;
       if (total > before) bumped++;

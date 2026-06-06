@@ -14,6 +14,7 @@ const TTL_MS = 1000 * 60 * 60 * 6;
 const LABEL_STYLE: Record<Profile["label"], { tone: string; bg: string }> = {
   "agent-ready": { tone: "text-score-ready", bg: "bg-score-ready/10 border-score-ready/30" },
   "agent-friendly": { tone: "text-score-friendly", bg: "bg-score-friendly/10 border-score-friendly/30" },
+  "commercially-gated": { tone: "text-purple-600 dark:text-purple-400", bg: "bg-purple-500/10 border-purple-500/30" },
   partial: { tone: "text-score-partial", bg: "bg-score-partial/10 border-score-partial/30" },
   limited: { tone: "text-score-limited", bg: "bg-score-limited/10 border-score-limited/30" },
   unknown: { tone: "text-score-unknown", bg: "bg-score-unknown/10 border-score-unknown/30" },
@@ -96,7 +97,7 @@ export default async function DomainPage({
         </p>
       </section>
 
-      {/* Approval checklist (the hero — lead with what to DO) */}
+      {/* Approval checklist (the hero - lead with what to DO) */}
       <section className="space-y-4">
         <h2 className="text-2xl font-semibold tracking-tight">
           How to access {profile.name ?? profile.domain} as an agent
@@ -203,7 +204,7 @@ function SignalRow({ signal }: { signal: Signal }) {
         ) : signal.points < 0 ? (
           <span className="text-score-blocked">flagged</span>
         ) : (
-          <span className="opacity-50">—</span>
+          <span className="opacity-50"> - </span>
         )}
         {signal.detail && <div className="opacity-70 text-xs mt-0.5">{signal.detail}</div>}
       </td>

@@ -11,7 +11,7 @@ of whether it had any way for an agent to actually do something. v0.2 treats
 
 | Tier | Signal | Points | Why |
 |---|---|---|---|
-| **Callable surface** | Listed in GitHub MCP Registry | +25 | Real, callable agent surface — top tier. |
+| **Callable surface** | Listed in GitHub MCP Registry | +25 | Real, callable agent surface - top tier. |
 | | `.well-known/agent-card.json` (A2A) | +25 | Agent-to-agent discoverable. |
 | | OpenAPI spec | +18 | Canonical machine-readable API. |
 | | `agents.json` (root or `.well-known`) | +15 | Structured manifest of supported protocols. |
@@ -43,16 +43,16 @@ of whether it had any way for an agent to actually do something. v0.2 treats
 | 20–34 | `partial` | One callable surface OR multiple declared-intent signals. Usable, but limited. |
 | 10–19 | `limited` | Discoverable but mostly via soft signals; API access is unclear. |
 | 0–9 | `unknown` | Publishes `llms.txt` or similar AEO files, no real agent surface confirmed. |
-| <0 | `blocked` | Actively hostile — explicit AI crawler block or edge bot-management. |
+| <0 | `blocked` | Actively hostile - explicit AI crawler block or edge bot-management. |
 
 ## Design principles
 
 - **Additive, not multiplicative.** Each signal stands on its own; absence of any one signal doesn't disqualify the others.
 - **Conservative parsing.** A signal counts only when the body parses cleanly. "Endpoint exists but isn't valid JSON" earns no points.
-- **Penalties only on active hostility.** A site missing standards isn't blocked — it's just early. Negative scores require explicit "Disallow: /" against known agents or documented anti-automation terms.
-- **Upstream credit.** If a site already ships an MCP server or A2A agent (via the GitHub MCP Registry or A2A Registry), we credit that without re-validating — those upstreams are the source of truth.
+- **Penalties only on active hostility.** A site missing standards isn't blocked - it's just early. Negative scores require explicit "Disallow: /" against known agents or documented anti-automation terms.
+- **Upstream credit.** If a site already ships an MCP server or A2A agent (via the GitHub MCP Registry or A2A Registry), we credit that without re-validating - those upstreams are the source of truth.
 - **Reproducible.** Every weight is in `lib/scorer.ts`. Every score is `signals.map(s => s.points).sum()`. Open a PR to change a weight.
 
 ## Changing the rubric
 
-Open an issue with a proposed delta and the reasoning. Weight changes are not breaking by default — old scores re-compute on next scan.
+Open an issue with a proposed delta and the reasoning. Weight changes are not breaking by default - old scores re-compute on next scan.

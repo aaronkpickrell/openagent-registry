@@ -12,7 +12,7 @@ export default function AboutPage() {
         </p>
         <ol className="list-decimal list-inside space-y-1.5">
           <li>
-            Scan any URL for the full stack of agent-access signals — <span className="font-mono">llms.txt</span>,{" "}
+            Scan any URL for the full stack of agent-access signals - <span className="font-mono">llms.txt</span>,{" "}
             <span className="font-mono">agents.txt</span>, A2A, MCP, OpenAPI,{" "}
             <span className="font-mono">robots.txt</span> + Content Signals, OAuth, RSL.
           </li>
@@ -20,7 +20,7 @@ export default function AboutPage() {
             Score and rank by industry category against a transparent rubric.
           </li>
           <li>
-            Generate a concrete approval-path checklist with deep links — not just &ldquo;you have
+            Generate a concrete approval-path checklist with deep links - not just &ldquo;you have
             OAuth&rdquo; but &ldquo;register here, request these scopes.&rdquo;
           </li>
         </ol>
@@ -37,7 +37,7 @@ export default function AboutPage() {
             <a className="underline" href="https://github.com/thedaviddias/llms-txt-hub">
               llms-txt-hub
             </a>{" "}
-            — the directory of sites publishing <span className="font-mono">llms.txt</span>.
+            - the directory of sites publishing <span className="font-mono">llms.txt</span>.
           </li>
           <li>
             <a
@@ -46,25 +46,25 @@ export default function AboutPage() {
             >
               Agent Friendly Directory
             </a>{" "}
-            — curated agent-usable services.
+            - curated agent-usable services.
           </li>
           <li>
             <a className="underline" href="https://github.com/prassanna-ravishankar/a2a-registry">
               A2A Registry
             </a>{" "}
-            — live A2A agents with validation.
+            - live A2A agents with validation.
           </li>
           <li>
             <a className="underline" href="https://github.com/mcp">
               GitHub MCP Registry
             </a>{" "}
-            — canonical MCP servers.
+            - canonical MCP servers.
           </li>
           <li>
             <a className="underline" href="https://parallel.ai/blog/LLMTEXT-for-llmstxt">
               LLMTEXT
             </a>{" "}
-            — <span className="font-mono">llms.txt</span> tooling.
+            - <span className="font-mono">llms.txt</span> tooling.
           </li>
         </ul>
       </section>

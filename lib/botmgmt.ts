@@ -1,7 +1,7 @@
 // Detect bot-management / WAF products that actively block automated traffic
 // at the edge. A site behind one of these will return 403/429/anti-bot challenge
 // pages for our scanner regardless of what well-known files are actually
-// published — so "nothing found" is misleading. We want to surface "blocked at
+// published - so "nothing found" is misleading. We want to surface "blocked at
 // edge by X" as a distinct, negative signal.
 
 import type { FetchResult } from "./fetchers";
@@ -40,7 +40,7 @@ export function detectBotManagement(homepage: FetchResult | undefined): BotMgmtD
     };
   }
 
-  // Cloudflare bot management — only count it as blocking when there's a
+  // Cloudflare bot management - only count it as blocking when there's a
   // mitigation signal, not just presence of cf-ray (most sites are on CF).
   if (headers["cf-mitigated"]) {
     return {

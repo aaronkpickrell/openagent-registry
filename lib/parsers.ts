@@ -1,7 +1,7 @@
 // Parsers convert a raw fetched body into a small, structured fact-set.
 // They are intentionally conservative: every parser handles the common case
 // and reports unknowns as null rather than guessing. The goal is "no false
-// positives" — better to under-claim than to overclaim.
+// positives" - better to under-claim than to overclaim.
 
 export interface RobotsParsed {
   user_agents: string[];

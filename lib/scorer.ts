@@ -1,4 +1,5 @@
 import { isJsonResponse, isPlainTextResponse, type RawScan } from "./fetchers";
+import { detectCommercial } from "./commercial";
 import {
   parseAgentCard,
   parseAgentsTxt,
@@ -18,10 +19,14 @@ import type { ApprovalStep, Profile, ScoreLabel, Signal } from "./types";
 // flooded the top of the leaderboard with low-quality sites whose only act of
 // agent-readiness was publishing an llms.txt for AEO. The new weights treat
 // llms.txt as a basic AEO move (small bonus), not a foundation, and demote
-// upstream-registry membership to a near-zero signal — what matters is what the
+// upstream-registry membership to a near-zero signal - what matters is what the
 // scanner can actually verify on the site itself.
 export const WEIGHTS = {
-  // Real machine-usable surfaces — these are what let an agent DO something.
+  // Commercial / licensed agent access - per the v0.3 reframing, this is the
+  // single strongest non-callable signal: a site that has a paid/licensed path
+  // for agents has thought through both access AND disintermediation.
+  licensed_commercial_access: 30,
+  // Real machine-usable surfaces - these are what let an agent DO something.
   mcp_registry: 25,
   a2a_agent_card: 25,
   openapi: 18,
@@ -30,40 +35,44 @@ export const WEIGHTS = {
   oauth_discovery: 12,
   approval_path: 10,
   dev_docs: 8,
-  // Declared-intent signals — useful but not a callable surface on their own.
+  // Declared-intent signals - useful but not a callable surface on their own.
   agents_txt: 6,
   rsl: 6,
   content_signals: 5,
   agents_md: 4,
-  // Soft / AEO signals — having them is a small bonus; absence is not damning.
-  llms_txt: 3,
-  in_agent_friendly_directory: 3,
-  robots_allows: 3,
-  llms_full_txt: 2,
-  in_llms_txt_hub: 1,
+  // Soft / AEO signals - anyone doing anything earns visible credit (v0.3).
+  llms_txt: 5,
+  robots_allows: 4,
+  in_agent_friendly_directory: 4,
+  llms_full_txt: 3,
+  in_llms_txt_hub: 2,
   ai_plugin_json_legacy: 0,
-  // Penalties — active hostility.
+  // Penalties - active hostility (but neutralized when commercial access exists).
   explicit_prohibition: -50,
   blocks_automation: -30,
   blocked_by_bot_management: -20,
   unknown_terms: -10,
 } as const;
 
-export function labelFor(score: number): ScoreLabel {
-  // Thresholds calibrated against the v0.2 weights: a site needs real
-  // callable surfaces (OpenAPI+18, OAuth+12, MCP+25, A2A+25, agents.json+15)
-  // to earn anything above "limited." Just publishing llms.txt earns you ~+8
-  // total — correctly "unknown" or "limited," not the inflated bucket the
-  // first cut produced.
+export function labelFor(
+  score: number,
+  opts: { hasCommercial?: boolean; wasBlocked?: boolean } = {},
+): ScoreLabel {
+  // Commercial trumps block: a site that explicitly licenses agent access
+  // AND restricts anonymous traffic is in the strongest posture - they want
+  // agents, they have a business model for it, and they protect themselves
+  // from disintermediation. Surface that as its own positive label rather
+  // than burying it as just a score.
+  if (opts.hasCommercial && opts.wasBlocked && score >= 0) return "commercially-gated";
   if (score < 0) return "blocked";
-  if (score < 10) return "unknown";
-  if (score < 20) return "limited";
-  if (score < 35) return "partial";
+  if (score < 5) return "unknown";
+  if (score < 15) return "limited";
+  if (score < 30) return "partial";
   if (score < 55) return "agent-friendly";
   return "agent-ready";
 }
 
-interface AggregateContext {
+export interface AggregateContext {
   inLlmsTxtHub?: boolean;
   inAgentFriendlyDirectory?: boolean;
   inMcpRegistry?: boolean;
@@ -78,16 +87,49 @@ export function score(
   const push = (s: Signal) => signals.push(s);
   const base = `https://${domain}`;
 
-  // --- bot management / WAF blocking (run FIRST so the report leads with this) ---
+  // --- commercial / licensed agent access (run first - it's the new top signal) ---
+  const commercial = detectCommercial({
+    rslWellKnown: raw.rsl_wellknown,
+    rslRoot: raw.rsl_root,
+    licensingPage: raw.licensing_page,
+    licensePage: raw.license_page,
+    apiLicensing: raw.api_licensing,
+    aiLicensing: raw.ai_licensing,
+    homepage: raw.homepage,
+    robotsTxt: raw.robots_txt,
+    anyProbes: Object.values(raw),
+  });
+  if (commercial.found) {
+    push({
+      key: "licensed_commercial_access",
+      found: true,
+      points: WEIGHTS.licensed_commercial_access,
+      detail: `Commercial agent-access mechanism detected: ${commercial.evidence[0]}${
+        commercial.evidence.length > 1 ? ` (+${commercial.evidence.length - 1} more signals)` : ""
+      }. Sites with explicit licensing pathways are the most agent-prepared - they have both access and disintermediation handled.`,
+      parsed: {
+        mechanisms: commercial.mechanism,
+        evidence: commercial.evidence,
+      },
+    });
+  }
+
+  // --- bot management / WAF blocking ---
   const bm = detectBotManagement(raw.homepage);
   if (bm) {
+    // If commercial access is present, the edge block is the *enforcement*
+    // mechanism for that licensing - not hostility. Score it as zero, not
+    // negative. The labelFor() will surface this as "commercially-gated".
+    const adjustedPoints = commercial.found ? 0 : WEIGHTS.blocked_by_bot_management;
     push({
       key: "blocked_by_bot_management",
       found: true,
       url: raw.homepage?.url,
-      points: WEIGHTS.blocked_by_bot_management,
-      detail: `Edge-protected by ${productName(bm.product)}. ${bm.evidence}. The scanner can only see what reaches the application — if you protect with bot management, expect agents to be unable to discover your well-known files even if you publish them.`,
-      parsed: { product: bm.product, evidence: bm.evidence },
+      points: adjustedPoints,
+      detail: commercial.found
+        ? `Edge-protected by ${productName(bm.product)}, paired with a commercial licensing path - together this is a mature "agents welcome through the front door" posture.`
+        : `Edge-protected by ${productName(bm.product)}. ${bm.evidence}. The scanner can only see what reaches the application - if you protect with bot management, expect agents to be unable to discover your well-known files even if you publish them.`,
+      parsed: { product: bm.product, evidence: bm.evidence, neutralized_by_commercial: commercial.found },
     });
   }
 
@@ -202,15 +244,19 @@ export function score(
     push({ key: "agents_md", found: false, points: 0 });
   }
 
-  // --- OpenAPI ---
-  const openapi = isJsonResponse(raw.openapi_json)
-    ? raw.openapi_json
-    : isJsonResponse(raw.swagger_json)
-      ? raw.swagger_json
-      : raw.openapi_yaml?.found && /^(openapi|swagger)\s*:/i.test(raw.openapi_yaml.body ?? "")
-        ? raw.openapi_yaml
-        : null;
-  if (openapi?.found && openapi.body) {
+  // --- OpenAPI - try every plausible location, take the first valid one ---
+  const openapi =
+    (isJsonResponse(raw.openapi_json) && raw.openapi_json) ||
+    (isJsonResponse(raw.swagger_json) && raw.swagger_json) ||
+    (isJsonResponse(raw.openapi_docs) && raw.openapi_docs) ||
+    (isJsonResponse(raw.openapi_api_docs) && raw.openapi_api_docs) ||
+    (isJsonResponse(raw.openapi_developer) && raw.openapi_developer) ||
+    (isJsonResponse(raw.openapi_api) && raw.openapi_api) ||
+    (raw.openapi_yaml?.found &&
+      /^(openapi|swagger)\s*:/i.test(raw.openapi_yaml.body ?? "") &&
+      raw.openapi_yaml) ||
+    null;
+  if (openapi && openapi.found && openapi.body) {
     const p = parseOpenApi(openapi.body);
     if (p.raw_valid) {
       push({
@@ -411,14 +457,14 @@ function buildApprovalPath(signals: Signal[], base: string): ApprovalStep[] {
     steps.push({
       title: "Find the developer signup",
       detail:
-        "No standard OAuth discovery — most sites still have a developer-portal signup. Find the OAuth client registration page on their site.",
+        "No standard OAuth discovery - most sites still have a developer-portal signup. Find the OAuth client registration page on their site.",
       done: false,
     });
   }
   if (card?.found) {
     steps.push({
       title: "Talk to the A2A agent directly",
-      detail: "An agent-card is published — your agent can call this site's agent via A2A.",
+      detail: "An agent-card is published - your agent can call this site's agent via A2A.",
       link: card.url,
       done: true,
     });
@@ -445,7 +491,7 @@ function buildNextSteps(signals: Signal[]): string[] {
     if (s.found) continue;
     switch (s.key) {
       case "llms_txt":
-        out.push("Publish /llms.txt — a curated markdown index of your useful docs for LLMs.");
+        out.push("Publish /llms.txt - a curated markdown index of your useful docs for LLMs.");
         break;
       case "agents_txt":
         out.push("Publish /agents.txt declaring which agent protocols you support.");
@@ -479,13 +525,23 @@ export function buildProfile(args: {
   category?: Profile["category"];
 }): Profile {
   const { signals, score: total, approval, nextSteps } = score(args.domain, args.raw, args.ctx ?? {});
+  const hasCommercial = signals.some(
+    (s) => s.key === "licensed_commercial_access" && s.found,
+  );
+  const wasBlocked = signals.some(
+    (s) =>
+      s.found &&
+      (s.key === "blocked_by_bot_management" ||
+        s.key === "blocks_automation" ||
+        s.key === "explicit_prohibition"),
+  );
   return {
     domain: args.domain,
     name: args.name,
     category: args.category,
     scanned_at: new Date().toISOString(),
     score: total,
-    label: labelFor(total),
+    label: labelFor(total, { hasCommercial, wasBlocked }),
     signals,
     approval_path: approval,
     recommended_next_steps: nextSteps,

@@ -1,6 +1,6 @@
 // Parallel fetchers for the well-known endpoints we care about.
 // Each fetcher returns the raw body (string) plus the response URL it actually
-// got — letting the scorer/parser decide presence and quality.
+// got - letting the scorer/parser decide presence and quality.
 //
 // Fetch policy:
 //   - Each request gets a 5s AbortController timeout.
@@ -97,12 +97,27 @@ export const WELL_KNOWNS = [
   { key: "agent_card", path: "/.well-known/agent-card.json" },
   { key: "api_catalog", path: "/.well-known/api-catalog" },
   { key: "agents_md", path: "/AGENTS.md" },
+  // OpenAPI: standard + common non-standard paths. We probe several because
+  // real APIs rarely sit at /openapi.json - most companies host it under
+  // /docs/, /api/, /developer/, etc.
   { key: "openapi_json", path: "/openapi.json" },
   { key: "openapi_yaml", path: "/openapi.yaml" },
   { key: "swagger_json", path: "/swagger.json" },
+  { key: "openapi_docs", path: "/docs/openapi.json" },
+  { key: "openapi_api_docs", path: "/api-docs/openapi.json" },
+  { key: "openapi_developer", path: "/developer/openapi.json" },
+  { key: "openapi_api", path: "/api/openapi.json" },
   { key: "ai_plugin_legacy", path: "/.well-known/ai-plugin.json" },
   { key: "oauth_authorization_server", path: "/.well-known/oauth-authorization-server" },
   { key: "openid_configuration", path: "/.well-known/openid-configuration" },
+  // Commercial / licensing surfaces - the "we have a paid path for agents"
+  // signal. Strongest non-callable indicator of a mature agent posture.
+  { key: "rsl_wellknown", path: "/.well-known/rsl.xml" },
+  { key: "rsl_root", path: "/rsl.xml" },
+  { key: "licensing_page", path: "/licensing" },
+  { key: "license_page", path: "/license" },
+  { key: "api_licensing", path: "/api/licensing" },
+  { key: "ai_licensing", path: "/ai-licensing" },
 ] as const;
 
 export type WellKnownKey = (typeof WELL_KNOWNS)[number]["key"];

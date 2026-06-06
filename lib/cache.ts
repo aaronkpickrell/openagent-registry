@@ -9,7 +9,7 @@
 // Production note: Vercel serverless filesystem is read-only outside /tmp, so
 // runtime writes only update the in-memory map for the lifetime of that
 // instance. Persistence beyond an instance requires a real database (Vercel KV
-// or Postgres — slotted for a follow-up).
+// or Postgres - slotted for a follow-up).
 
 import { promises as fs } from "node:fs";
 import path from "node:path";

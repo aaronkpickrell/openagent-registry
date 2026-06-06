@@ -46,7 +46,7 @@ const HUB_CATEGORY_MAP: Record<string, CategorySlug> = {
 
 /**
  * Normalize an upstream category string to one of our slugs.
- * Unknown categories default to "developer" — the broadest catch-all for
+ * Unknown categories default to "developer" - the broadest catch-all for
  * agent-facing infrastructure. Site owners + PRs can recategorize later.
  */
 export function mapUpstreamCategory(raw: string | null | undefined): CategorySlug {

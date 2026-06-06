@@ -1,5 +1,5 @@
 // Profile is the canonical shape returned by /api/scan and stored in the cache.
-// Keep this stable — the data file format mirrors it.
+// Keep this stable - the data file format mirrors it.
 
 export type SignalKey =
   | "mcp_registry"
@@ -20,6 +20,7 @@ export type SignalKey =
   | "in_llms_txt_hub"
   | "in_agent_friendly_directory"
   | "ai_plugin_json_legacy"
+  | "licensed_commercial_access"
   | "explicit_prohibition"
   | "blocks_automation"
   | "blocked_by_bot_management"
@@ -40,6 +41,7 @@ export type ScoreLabel =
   | "partial"
   | "limited"
   | "unknown"
+  | "commercially-gated"
   | "blocked";
 
 export interface ApprovalStep {

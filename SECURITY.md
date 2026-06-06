@@ -2,7 +2,7 @@
 
 ## Reporting a vulnerability
 
-If you discover a security issue in OpenAgent Registry — for example:
+If you discover a security issue in OpenAgent Registry - for example:
 
 - a way to make the scanner fetch or return arbitrary internal content
 - a server-side request forgery (SSRF) vector in the `/api/scan` endpoint
@@ -32,7 +32,7 @@ OpenAgent Registry is a public-facing scanner. The relevant security boundaries:
 
 ## Out of scope
 
-- Bugs in our scoring rubric — those are not security issues; open a normal
+- Bugs in our scoring rubric - those are not security issues; open a normal
   issue or PR.
 - The intentional behavior of fetching public well-known files on user-supplied
   domains.

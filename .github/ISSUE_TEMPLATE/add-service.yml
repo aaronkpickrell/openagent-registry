@@ -39,4 +39,4 @@ body:
     id: notes
     attributes:
       label: Notes
-      description: Anything notable about this service's agent surface — known MCP, known developer program, known anti-bot product, etc.
+      description: Anything notable about this service's agent surface - known MCP, known developer program, known anti-bot product, etc.

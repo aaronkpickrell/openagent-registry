@@ -17,7 +17,7 @@ export const CATEGORIES: CategoryDef[] = [
     slug: "content",
     name: "Content & News",
     description:
-      "Publishers and content platforms — the front line of AI training, attribution, and licensing.",
+      "Publishers and content platforms - the front line of AI training, attribution, and licensing.",
   },
   {
     slug: "social",
@@ -35,7 +35,7 @@ export const CATEGORIES: CategoryDef[] = [
     slug: "ai",
     name: "AI & ML Platforms",
     description:
-      "LLM providers, AI agents, ML infrastructure, and the agent-adjacent layer. The fastest-growing category — and the one agents call most.",
+      "LLM providers, AI agents, ML infrastructure, and the agent-adjacent layer. The fastest-growing category - and the one agents call most.",
   },
 ];
 
