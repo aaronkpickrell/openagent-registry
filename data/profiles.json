@@ -1688,8 +1688,8 @@
     "name": "GitHub",
     "category": "developer",
     "scanned_at": "2026-06-06T18:51:19.044Z",
-    "score": 25,
-    "label": "partial",
+    "score": 0,
+    "label": "unknown",
     "signals": [
       {
         "key": "llms_txt",
@@ -1748,8 +1748,8 @@
       },
       {
         "key": "mcp_registry",
-        "found": true,
-        "points": 25
+        "found": false,
+        "points": 0
       },
       {
         "key": "in_llms_txt_hub",

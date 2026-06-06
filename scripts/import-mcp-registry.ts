@@ -31,37 +31,88 @@ interface ApiResponse {
   metadata?: { nextCursor?: string };
 }
 
+// Domains that are HOSTING PLATFORMS, not publishers. We never credit these
+// for MCP registry presence just because something happens to be hosted on
+// them - that would be like crediting Heroku for every app deployed to it.
+// If the platform itself ships an MCP server (e.g., github.com/github/X under
+// the `github` org), the namespace check below catches that explicitly.
+const HOSTING_PLATFORMS = new Set([
+  "github.com",
+  "gitlab.com",
+  "bitbucket.org",
+  "vercel.app",
+  "netlify.app",
+  "pages.dev",
+  "fly.dev",
+  "ngrok.io",
+  "ngrok-free.app",
+  "amazonaws.com",
+  "execute-api.us-east-1.amazonaws.com",
+  "execute-api.us-west-2.amazonaws.com",
+  "azurewebsites.net",
+  "render.com",
+  "railway.app",
+  "replit.app",
+  "replit.dev",
+  "glitch.me",
+  "deno.dev",
+  "workers.dev",
+  "cloudflareaccess.com",
+  "supabase.co", // hosting; supabase.com is the publisher
+]);
+
 function extractDomainCandidates(entry: ServerEntry): string[] {
   const cands: string[] = [];
   const name = entry.server.name ?? "";
-  // server.name often looks like "ac.inference.sh/mcp" or "io.github.modelcontextprotocol/everything"
-  // The first segment up to / is a reverse-DNS-ish or domain-ish identifier.
-  // Treat "io.github.X" → "github.com" (the company is on github). Reverse-DNS
-  // "ac.inference.sh/mcp" → "inference.sh".
+  // server.name uses reverse-DNS namespacing. For real publishers it looks
+  // like "com.stripe.mcp" or "io.something.actualcompany". For code hosted
+  // on a platform it looks like "io.github.modelcontextprotocol/everything",
+  // where `github` is the hosting platform, not the publisher.
+  //
+  // We extract the candidate publisher by forward-reading the namespace
+  // (stripping the TLD prefix). For `io.github.modelcontextprotocol`, this
+  // gives us "modelcontextprotocol" as the publisher org, not github.com.
   const firstSlash = name.indexOf("/");
   const ns = firstSlash > 0 ? name.slice(0, firstSlash) : name;
-  if (ns.startsWith("io.github.")) {
-    cands.push("github.com");
-  } else if (ns.includes(".")) {
-    // Reverse the segments to get a domain-ish guess: "ac.inference.sh" → "inference.sh.ac"
-    // But more often the registry uses forward order ("inference.sh") with a tld first.
-    // Try both readings.
-    cands.push(ns);
-    const reversed = ns.split(".").reverse().join(".");
-    cands.push(reversed);
+  if (ns.includes(".")) {
+    const parts = ns.split(".");
+    // Reverse-DNS pattern: first segment is TLD, rest is the domain
+    // (e.g., "com.stripe" -> "stripe.com"; "io.github.foo" -> "foo.github.io"
+    // which is wrong; "io.github.foo" actually means the publisher is `foo`
+    // hosted on github.io, so we don't credit ANY domain from a `io.github.`
+    // namespace - it's a hosting platform signal, not a publisher signal).
+    if (parts[0] === "io" && parts[1] === "github") {
+      // Skip - hosting platform, not publisher info
+    } else if (parts.length >= 2) {
+      // Reverse it to make a real domain: ["com","stripe"] -> "stripe.com"
+      const reversed = [...parts].reverse().join(".");
+      cands.push(reversed);
+    }
   }
+  // websiteUrl is the strongest publisher signal when present.
   if (entry.server.websiteUrl) {
     const h = hostOf(entry.server.websiteUrl);
-    if (h) cands.push(h);
+    if (h && !HOSTING_PLATFORMS.has(h)) cands.push(h);
   }
+  // Repository URL almost always points to github.com et al - skip unless
+  // the repo IS the publisher's own domain (rare).
   if (entry.server.repository?.url) {
     const h = hostOf(entry.server.repository.url);
-    if (h) cands.push(h);
+    if (h && !HOSTING_PLATFORMS.has(h)) cands.push(h);
   }
+  // Remote URLs are where the MCP server actually runs. Often a hosting
+  // platform subdomain (vercel.app, ngrok, etc.) - filter those out.
   for (const r of entry.server.remotes ?? []) {
     if (!r.url) continue;
     const h = hostOf(r.url);
-    if (h) cands.push(h);
+    if (!h) continue;
+    if (HOSTING_PLATFORMS.has(h)) continue;
+    // Also skip platform subdomains like "foo.vercel.app", "foo.ngrok.io".
+    const isPlatformSubdomain = [...HOSTING_PLATFORMS].some(
+      (p) => h.endsWith("." + p),
+    );
+    if (isPlatformSubdomain) continue;
+    cands.push(h);
   }
   return cands;
 }
