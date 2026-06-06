@@ -2,7 +2,7 @@
   "domain": "cloudflare.com",
   "name": "Cloudflare",
   "category": "developer",
-  "scanned_at": "2026-06-06T18:13:04.321Z",
+  "scanned_at": "2026-06-06T18:19:43.126Z",
   "score": 48,
   "label": "partial",
   "signals": [

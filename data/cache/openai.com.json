@@ -2,7 +2,7 @@
   "domain": "openai.com",
   "name": "OpenAI",
   "category": "developer",
-  "scanned_at": "2026-06-06T18:13:11.746Z",
+  "scanned_at": "2026-06-06T18:19:48.173Z",
   "score": -15,
   "label": "blocked",
   "signals": [

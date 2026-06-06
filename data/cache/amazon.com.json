@@ -2,7 +2,7 @@
   "domain": "amazon.com",
   "name": "Amazon",
   "category": "shopping",
-  "scanned_at": "2026-06-06T18:12:20.026Z",
+  "scanned_at": "2026-06-06T18:19:03.306Z",
   "score": -25,
   "label": "blocked",
   "signals": [

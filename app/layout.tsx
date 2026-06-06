@@ -22,6 +22,9 @@ export default function RootLayout({
               OpenAgent<span className="opacity-50">/Registry</span>
             </Link>
             <nav className="flex items-center gap-5 text-sm">
+              <Link href="/leaderboard" className="opacity-80 hover:opacity-100">
+                Leaderboard
+              </Link>
               <Link href="/category/rentals" className="opacity-80 hover:opacity-100">
                 Categories
               </Link>
@@ -29,7 +32,7 @@ export default function RootLayout({
                 About
               </Link>
               <a
-                href="https://github.com/openagent-registry/openagent-registry"
+                href="https://github.com/aaronkpickrell/openagent-registry"
                 className="opacity-80 hover:opacity-100"
               >
                 GitHub

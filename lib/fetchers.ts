@@ -109,6 +109,42 @@ export type WellKnownKey = (typeof WELL_KNOWNS)[number]["key"];
 
 export type RawScan = Partial<Record<WellKnownKey, FetchResult>>;
 
+/**
+ * Many SPAs respond to unknown paths with their HTML shell instead of 404.
+ * If we naively treat that as a found text file, our text-format parsers
+ * will produce garbage. This rejects responses that are clearly HTML when
+ * we expected text/plain or text/markdown.
+ */
+export function isPlainTextResponse(r: FetchResult | undefined): boolean {
+  if (!r || !r.found || !r.body) return false;
+  const ct = (r.contentType ?? "").toLowerCase();
+  // Accept canonical text content types.
+  if (
+    ct.startsWith("text/plain") ||
+    ct.startsWith("text/markdown") ||
+    ct.startsWith("text/x-markdown")
+  ) {
+    return true;
+  }
+  // If the server didn't declare a useful content-type, sniff the body.
+  const head = r.body.slice(0, 200).trim().toLowerCase();
+  if (head.startsWith("<!doctype") || head.startsWith("<html") || head.startsWith("<head")) {
+    return false;
+  }
+  // If we see HTML tags in the first chunk, it's not a text file.
+  if (/<[a-z][a-z0-9]*(\s|>)/i.test(head)) return false;
+  return true;
+}
+
+export function isJsonResponse(r: FetchResult | undefined): boolean {
+  if (!r || !r.found || !r.body) return false;
+  const ct = (r.contentType ?? "").toLowerCase();
+  if (ct.includes("json")) return true;
+  // Sniff: starts with { or [
+  const head = r.body.trimStart();
+  return head.startsWith("{") || head.startsWith("[");
+}
+
 export async function fetchAll(domain: string): Promise<RawScan> {
   const base = `https://${domain}`;
   const entries = await Promise.all(

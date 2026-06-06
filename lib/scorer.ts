@@ -1,4 +1,4 @@
-import type { RawScan } from "./fetchers";
+import { isJsonResponse, isPlainTextResponse, type RawScan } from "./fetchers";
 import {
   parseAgentCard,
   parseAgentsTxt,
@@ -75,7 +75,7 @@ export function score(
 
   // --- llms.txt ---
   const llms = raw.llms_txt;
-  if (llms?.found && llms.body) {
+  if (isPlainTextResponse(llms) && llms?.body) {
     const p = parseLlmsTxt(llms.body);
     push({
       key: "llms_txt",
@@ -93,7 +93,7 @@ export function score(
 
   // --- llms-full.txt ---
   const llmsFull = raw.llms_full_txt;
-  if (llmsFull?.found) {
+  if (llmsFull && isPlainTextResponse(llmsFull)) {
     push({
       key: "llms_full_txt",
       found: true,
@@ -107,7 +107,7 @@ export function score(
 
   // --- agents.txt ---
   const agentsTxt = raw.agents_txt;
-  if (agentsTxt?.found && agentsTxt.body) {
+  if (isPlainTextResponse(agentsTxt) && agentsTxt?.body) {
     const p = parseAgentsTxt(agentsTxt.body);
     const declared = Object.keys(p.declarations);
     push({
@@ -125,7 +125,11 @@ export function score(
   }
 
   // --- agents.json (either location) ---
-  const agentsJson = raw.agents_json_root?.found ? raw.agents_json_root : raw.agents_json_wellknown;
+  const agentsJson = isJsonResponse(raw.agents_json_root)
+    ? raw.agents_json_root
+    : isJsonResponse(raw.agents_json_wellknown)
+      ? raw.agents_json_wellknown
+      : null;
   if (agentsJson?.found) {
     push({
       key: "agents_json",
@@ -140,7 +144,7 @@ export function score(
 
   // --- A2A agent-card ---
   const card = raw.agent_card;
-  if (card?.found && card.body) {
+  if (isJsonResponse(card) && card?.body) {
     const p = parseAgentCard(card.body);
     if (p.raw_valid_json) {
       push({
@@ -167,24 +171,25 @@ export function score(
   }
 
   // --- AGENTS.md ---
-  if (raw.agents_md?.found) {
+  const agentsMd = raw.agents_md;
+  if (agentsMd && isPlainTextResponse(agentsMd)) {
     push({
       key: "agents_md",
       found: true,
-      url: raw.agents_md.url,
+      url: agentsMd.url,
       points: WEIGHTS.agents_md,
-      detail: `${(raw.agents_md.body ?? "").length} bytes`,
+      detail: `${(agentsMd.body ?? "").length} bytes`,
     });
   } else {
     push({ key: "agents_md", found: false, points: 0 });
   }
 
   // --- OpenAPI ---
-  const openapi = raw.openapi_json?.found
+  const openapi = isJsonResponse(raw.openapi_json)
     ? raw.openapi_json
-    : raw.swagger_json?.found
+    : isJsonResponse(raw.swagger_json)
       ? raw.swagger_json
-      : raw.openapi_yaml?.found
+      : raw.openapi_yaml?.found && /^(openapi|swagger)\s*:/i.test(raw.openapi_yaml.body ?? "")
         ? raw.openapi_yaml
         : null;
   if (openapi?.found && openapi.body) {
@@ -235,7 +240,7 @@ export function score(
 
   // --- robots.txt + Content Signals ---
   const robots = raw.robots_txt;
-  if (robots?.found && robots.body) {
+  if (isPlainTextResponse(robots) && robots?.body) {
     const p = parseRobots(robots.body);
     push({
       key: "robots_allows",
