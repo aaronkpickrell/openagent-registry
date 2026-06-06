@@ -1,0 +1,36 @@
+name: Feature or signal
+description: A new agent-access signal to check, a new category, or a product idea.
+labels: ["enhancement"]
+body:
+  - type: dropdown
+    id: kind
+    attributes:
+      label: What kind of feature?
+      options:
+        - New signal to scan for (e.g., a new well-known endpoint)
+        - New category
+        - New filter / sort / UI affordance
+        - Approval-path data for a specific service
+        - Public API improvement
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What
+      description: One paragraph describing the feature.
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why
+      description: What does this make easier for agent builders or site owners?
+    validations:
+      required: true
+  - type: textarea
+    id: refs
+    attributes:
+      label: References
+      description: Spec links, upstream registry, existing implementations, etc.

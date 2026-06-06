@@ -1,0 +1,36 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+      time: "09:00"
+      timezone: America/New_York
+    open-pull-requests-limit: 5
+    labels:
+      - dependencies
+    groups:
+      next-stack:
+        patterns:
+          - next
+          - eslint-config-next
+          - react
+          - react-dom
+          - "@types/react*"
+      tooling:
+        patterns:
+          - typescript
+          - tsx
+          - eslint
+          - prettier
+          - postcss
+          - autoprefixer
+          - tailwindcss
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: monthly
+    labels:
+      - dependencies
+      - github-actions

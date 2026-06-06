@@ -1,0 +1,42 @@
+name: Add a service
+description: Propose a service to add to data/seed.json so it appears in the leaderboard.
+labels: ["add-service"]
+body:
+  - type: input
+    id: domain
+    attributes:
+      label: Domain
+      placeholder: example.com
+    validations:
+      required: true
+  - type: input
+    id: name
+    attributes:
+      label: Display name
+      placeholder: Example
+    validations:
+      required: true
+  - type: dropdown
+    id: category
+    attributes:
+      label: Category
+      options:
+        - rentals
+        - shopping
+        - content
+        - social
+        - developer
+    validations:
+      required: true
+  - type: input
+    id: homepage
+    attributes:
+      label: Homepage URL
+      placeholder: https://example.com
+    validations:
+      required: true
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes
+      description: Anything notable about this service's agent surface — known MCP, known developer program, known anti-bot product, etc.

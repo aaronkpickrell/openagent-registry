@@ -1,0 +1,35 @@
+name: Bug report
+description: Something the scanner, scorer, or UI got wrong.
+labels: ["bug"]
+body:
+  - type: input
+    id: domain
+    attributes:
+      label: Domain involved
+      description: If the bug is about a specific scan result, the domain.
+      placeholder: example.com
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected
+      description: What the result, score, or behavior should have been.
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: What you got instead
+      description: Paste the actual output, scan result, or screenshot.
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: How to reproduce
+      description: Steps, URL, or curl command that reliably reproduces the issue.
+  - type: input
+    id: env
+    attributes:
+      label: Where you hit it
+      description: Production URL, local dev, or a specific API endpoint.
+      placeholder: https://openagent-registry.vercel.app/some.com
