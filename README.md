@@ -8,14 +8,17 @@ OpenAgent Registry (**OAR**) does three things in one place:
 2. **Scores** each site against a transparent, public rubric and ranks it within its industry category.
 3. **Tells you what to do about it** - a concrete approval-path checklist with deep links to the actual developer applications, OAuth signups, partner programs, and standards-adoption steps. *Lead with the checklist; the score is supporting evidence.*
 
-Built as **the missing aggregator** on top of the great work that already exists. We pull from / link to:
+**Sources of authoritative scoring credit** (registries / standards bodies):
 
-- [llms-txt-hub](https://github.com/thedaviddias/llms-txt-hub) - directory of sites publishing `llms.txt`
-- [Agent Friendly Directory](https://gist.github.com/sklivvz/cc23ace1b277265e9828b6e39f6e9103) - curated agent-usable services
-- [A2A Registry](https://github.com/prassanna-ravishankar/a2a-registry) - live A2A agents
-- [GitHub MCP Registry](https://github.com/mcp) - canonical MCP servers
-- [LLMTEXT](https://parallel.ai/blog/LLMTEXT-for-llmstxt) - `llms.txt` validation
+- [Official MCP Registry](https://registry.modelcontextprotocol.io/) - the MCP working group's catalog of MCP servers (+25 if your domain ships one)
 - Standards: [llms.txt](https://llmstxt.org/), [agents.txt / agents.json](https://agents-txt.com/), [A2A Protocol](https://a2a-protocol.org/), [Web Bot Auth](https://datatracker.ietf.org/doc/draft-meunier-web-bot-auth-architecture/), [RSL](https://rslstandard.org/)
+
+**Community resources used for domain discovery only** (no score credit; we use these to know which sites to scan):
+
+- [thedaviddias/llms-txt-hub](https://github.com/thedaviddias/llms-txt-hub) - one maintainer's community list of sites publishing `llms.txt`
+- [Agent Friendly Directory](https://gist.github.com/sklivvz/cc23ace1b277265e9828b6e39f6e9103) - sklivvz's curated agent-usable services
+- [A2A Registry](https://github.com/prassanna-ravishankar/a2a-registry) - community directory of A2A agents
+- [LLMTEXT](https://parallel.ai/blog/LLMTEXT-for-llmstxt) - `llms.txt` validation toolkit
 
 What OAR adds that none of the above does today:
 

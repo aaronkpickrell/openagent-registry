@@ -45,7 +45,7 @@ export const WEIGHTS = {
   robots_allows: 4,
   in_agent_friendly_directory: 4,
   llms_full_txt: 3,
-  in_llms_txt_hub: 2,
+  in_llms_txt_hub: 0,
   ai_plugin_json_legacy: 0,
   // Penalties - active hostility (but neutralized when commercial access exists).
   explicit_prohibition: -50,

@@ -27,7 +27,7 @@ of whether it had any way for an agent to actually do something. v0.2 treats
 | | Listed in Agent Friendly Directory | +3 | Curated agent-usable listing. |
 | | `robots.txt` parsed and allows docs/API | +3 | Basic policy file presence. |
 | | `llms-full.txt` (extended) | +2 | Full content snapshot for LLMs. |
-| | Listed in llms-txt-hub | +1 | Directory presence; not a quality signal. |
+| | Listed in llms-txt-hub | 0 | Used as a domain-discovery source only. It's one maintainer's curated list, not a registry, and doesn't tell us anything about the site itself - so no score credit. |
 | | `ai-plugin.json` (deprecated) | 0 | No credit; outdated. |
 | **Penalties** | Explicit AI crawler `Disallow: /` | -50 | Active prohibition. |
 | | Blocks automation with no API alternative | -30 | Hard wall, no documented path. |

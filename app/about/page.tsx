@@ -27,44 +27,59 @@ export default function AboutPage() {
       </section>
 
       <section className="space-y-3">
-        <h2 className="text-xl font-semibold">Built on top of what already exists</h2>
+        <h2 className="text-xl font-semibold">Where scoring credit comes from</h2>
         <p className="opacity-90">
-          Several great projects cover pieces of this. OAR is the aggregator with opinion. We
-          credit / link / pull from:
+          We grant score credit only for things we can functionally verify on the site itself, or for
+          membership in authoritative registries run by the standards body for that protocol:
+        </p>
+        <ul className="list-disc list-inside space-y-1 opacity-90">
+          <li>
+            <a
+              className="underline"
+              href="https://registry.modelcontextprotocol.io/"
+            >
+              Official MCP Registry
+            </a>{" "}
+            - run by the MCP working group; sites that ship MCP servers get the +25 credit.
+          </li>
+          <li>
+            Live well-known probes against the site (
+            <span className="font-mono">llms.txt</span>,{" "}
+            <span className="font-mono">agents.txt</span>, A2A agent-card, OpenAPI,{" "}
+            <span className="font-mono">robots.txt</span> + Content Signals, RSL, OAuth discovery).
+          </li>
+        </ul>
+      </section>
+
+      <section className="space-y-3">
+        <h2 className="text-xl font-semibold">Community resources we use for discovery (not scoring)</h2>
+        <p className="opacity-90">
+          To know which sites to scan, we pull domain lists from useful community-maintained
+          projects. Being on one of these lists does not affect a site's score - the score comes only
+          from what our scanner verifies on the site itself.
         </p>
         <ul className="list-disc list-inside space-y-1 opacity-90">
           <li>
             <a className="underline" href="https://github.com/thedaviddias/llms-txt-hub">
-              llms-txt-hub
+              thedaviddias/llms-txt-hub
             </a>{" "}
-            - the directory of sites publishing <span className="font-mono">llms.txt</span>.
+            - one maintainer's community list of sites that publish{" "}
+            <span className="font-mono">llms.txt</span>.
           </li>
           <li>
             <a
               className="underline"
               href="https://gist.github.com/sklivvz/cc23ace1b277265e9828b6e39f6e9103"
             >
-              Agent Friendly Directory
+              sklivvz/Agent Friendly Directory
             </a>{" "}
             - curated agent-usable services.
           </li>
           <li>
             <a className="underline" href="https://github.com/prassanna-ravishankar/a2a-registry">
-              A2A Registry
+              prassanna-ravishankar/a2a-registry
             </a>{" "}
-            - live A2A agents with validation.
-          </li>
-          <li>
-            <a className="underline" href="https://github.com/mcp">
-              GitHub MCP Registry
-            </a>{" "}
-            - canonical MCP servers.
-          </li>
-          <li>
-            <a className="underline" href="https://parallel.ai/blog/LLMTEXT-for-llmstxt">
-              LLMTEXT
-            </a>{" "}
-            - <span className="font-mono">llms.txt</span> tooling.
+            - community directory of A2A agents.
           </li>
         </ul>
       </section>
