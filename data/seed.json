@@ -36,5 +36,6 @@
   { "domain": "npmjs.com", "name": "npm", "category": "developer", "homepage": "https://npmjs.com" },
   { "domain": "aws.amazon.com", "name": "AWS", "category": "developer", "homepage": "https://aws.amazon.com" },
   { "domain": "anthropic.com", "name": "Anthropic", "category": "developer", "homepage": "https://anthropic.com" },
-  { "domain": "openai.com", "name": "OpenAI", "category": "developer", "homepage": "https://openai.com" }
+  { "domain": "openai.com", "name": "OpenAI", "category": "developer", "homepage": "https://openai.com" },
+  { "domain": "agent.tokenpatch.com", "name": "Agent Signal Hub", "category": "developer", "homepage": "https://agent.tokenpatch.com", "notes": "Machine-first, invitation-only intelligence exchange node with llms.txt, agent discovery, OpenAPI, and signed Agent writes." }
 ]
